@@ -1,0 +1,36 @@
+name: TWSE 籌碼每日自動結算
+
+on:
+  schedule:
+    # 國際標準時間 (UTC) 08:10 = 台北時間 (GMT+8) 16:10
+    # 每週一至週五下午 4:10 自動執行
+    - cron: '10 8 * * 1-5'
+  workflow_dispatch: # 允許你在 GitHub 網頁上手動點擊按鈕立即執行（測試用）
+
+jobs:
+  run-robot:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 複製程式碼到 GitHub 雲端環境
+      - name: 檢查程式碼
+        uses: actions/checkout@v4
+
+      # 2. 安裝 Node.js 環境
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. 安裝我們需要的套件 (@supabase/supabase-js, dotenv)
+      - name: 安裝相依套件
+        run: npm install
+
+      # 4. 啟動機器人計算籌碼
+      - name: 執行籌碼機器人
+        env:
+          # 將 GitHub 的安全金鑰引渡進環境變數中
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: npm start
