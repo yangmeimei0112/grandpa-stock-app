@@ -1,0 +1,3 @@
+/api/twse/* https://openapi.twse.com.tw/:splat  200
+/api/official/* https://www.twse.com.tw/:splat      200
+/* /index.html                         200
